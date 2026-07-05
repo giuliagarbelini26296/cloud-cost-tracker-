@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Expenses
+{% endblock %}
+
+{% block main %}
+    <h2 class="mb-4">Add expense</h2>
+    <form action="/expenses" method="post" class="row g-3 mb-5">
+        <div class="col-md-3">
+            <select class="form-control" name="provider_id" required>
+                <option value="" disabled selected>Provider</option>
+                {% for provider in providers %}
+                    <option value="{{ provider.id }}">{{ provider.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" name="category" required>
+                <option value="" disabled selected>Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" step="0.01" min="0.01" class="form-control" name="amount" placeholder="Amount ($)" required>
+        </div>
+        <div class="col-md-2">
+            <input type="date" class="form-control" name="expense_date" value="{{ hoje }}" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Add</button>
+        </div>
+    </form>
+
+    <h2 class="mb-3">History</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Provider</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in lista %}
+                <tr>
+                    <td>{{ item.provider }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>${{ "%.2f"|format(item.amount) }}</td>
+                    <td>{{ item.expense_date }}</td>
+                    <td><a href="/expenses/delete/{{ item.id }}" class="btn btn-sm btn-outline-danger">Delete</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

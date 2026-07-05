@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Budgets
+{% endblock %}
+
+{% block main %}
+    <h2 class="mb-4">Set monthly budget</h2>
+    <form action="/budgets" method="post" class="row g-3 mb-5">
+        <div class="col-md-4">
+            <select class="form-control" name="category" required>
+                <option value="" disabled selected>Category</option>
+                {% for category in categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="number" step="0.01" min="0.01" class="form-control" name="monthly_limit" placeholder="Monthly limit ($)" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Save</button>
+        </div>
+    </form>
+
+    <h2 class="mb-3">Current budgets</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Monthly limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in lista %}
+                <tr>
+                    <td>{{ item.category }}</td>
+                    <td>${{ "%.2f"|format(item.monthly_limit) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+    <h2 class="mb-4">This month's overview</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card p-3 text-center">
+                <h5>Total spent this month</h5>
+                <h2>${{ "%.2f"|format(total_mes) }}</h2>
+            </div>
+        </div>
+    </div>
+
+    {% if alertas %}
+        <div class="alert alert-danger">
+            <strong>Budget alerts:</strong>
+            <ul class="mb-0">
+                {% for alerta in alertas %}
+                    <li>{{ alerta.category }}: spent ${{ "%.2f"|format(alerta.gasto) }} of ${{ "%.2f"|format(alerta.limite) }} budget</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <h5>Spend by provider</h5>
+            <canvas id="providerChart"></canvas>
+        </div>
+        <div class="col-md-6 mb-4">
+            <h5>Spend by category</h5>
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const providerLabels = {{ por_provedor | map(attribute='name') | list | tojson }};
+        const providerData = {{ por_provedor | map(attribute='total') | list | tojson }};
+
+        const categoryLabels = {{ por_categoria | map(attribute='category') | list | tojson }};
+        const categoryData = {{ por_categoria | map(attribute='total') | list | tojson }};
+
+        new Chart(document.getElementById('providerChart'), {
+            type: 'bar',
+            data: {
+                labels: providerLabels,
+                datasets: [{ label: 'Amount ($)', data: providerData, backgroundColor: '#477bff' }]
+            },
+            options: { responsive: true }
+        });
+
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{ data: categoryData, backgroundColor: ['#477bff', '#d9edff', '#212529', '#f5f5f5'] }]
+            },
+            options: { responsive: true }
+        });
+    </script>
+{% endblock %}
