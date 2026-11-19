@@ -54,7 +54,7 @@ The database (`cloud_costs.db`) has four tables:
 - `templates/` — Jinja templates for every page, extending a shared
   `layout.html` with a Bootstrap navbar.
 - `static/styles.css` — small custom styling on top of Bootstrap.
-- `cloud_costs.db` — the SQLite database.
+- `schema.sql` — database schema and provider seed (the database file itself is not versioned).
 
 ## Design choices
 
@@ -71,6 +71,7 @@ category" semantics — setting a new value should simply replace the old one.
 
 1. Install dependencies: `pip install -r requirements.txt` (Flask,
    Flask-Session, CS50, Werkzeug).
-2. Run `flask run`.
-3. Visit the URL shown in the terminal, register an account, and start
+2. Create the database: `sqlite3 cloud_costs.db < schema.sql`.
+3. Run `flask run`.
+4. Visit the URL shown in the terminal, register an account, and start
    tracking expenses.
